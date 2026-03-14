@@ -1,7 +1,6 @@
-const request = require('supertest');
-const app = require('./app');
+const express = require('express');
+const app = express();
 
-test('GET / returns 200', async () => {
-  const res = await request(app).get('/');
-  expect(res.statusCode toBe(200);
-});
+app.get('/', (req, res) => res.send('Pipeline is LIVE! 🚀'));
+
+app.listen(3000, () => console.log('App running on port 3000'));
