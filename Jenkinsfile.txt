@@ -1,40 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "cicd-demo"
-        CONTAINER_NAME = "cicd-demo-app"
-    }
-
     stages {
-
-        stage('Clone Repository') {
+        stage('Test Stage') {
             steps {
-                echo 'Cloning repository...'
-                checkout scm
+                echo 'Pipeline working!'
             }
         }
-
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing dependencies...'
-                bat 'npm install'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                bat 'docker build -t cicd-demo .'
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                echo 'Running Docker container...'
-                bat 'docker run -d -p 3000:3000 cicd-demo'
-            }
-        }
-
     }
 }
