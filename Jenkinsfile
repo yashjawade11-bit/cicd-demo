@@ -32,19 +32,32 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                bat 'docker build -t %IMAGE_NAME% .'
+                bat "docker build -t %IMAGE_NAME%:latest ."
             }
         }
 
-        stage('Deploy Container') {
+        stage('Stop Old Container') {
             steps {
-                echo 'Deploying container...'
-                bat '''
-                docker stop %CONTAINER_NAME% || exit 0
-                docker rm %CONTAINER_NAME% || exit 0
-                docker run -d -p 3000:3000 --name %CONTAINER_NAME% %IMAGE_NAME%
-                '''
+                echo 'Stopping old container if running...'
+                bat "docker stop %CONTAINER_NAME%"
+                bat "docker rm %CONTAINER_NAME%"
             }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying new container...'
+                bat "docker run -d --name %CONTAINER_NAME% -p 3000:3000 %IMAGE_NAME%:latest"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs.'
         }
     }
 }
